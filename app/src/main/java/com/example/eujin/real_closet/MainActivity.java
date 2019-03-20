@@ -40,18 +40,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void validate(String userName, String userPassword){
-        if ((userName=="Admin") && (userPassword=="12345")){
+        if ((userName.equals("admin")) && (userPassword.equals("12345"))){
             Intent intent=new Intent(MainActivity.this, MenuActivity.class);
             //start and destination
-
             startActivity(intent);
         }
 
         else{
             count--; //after 5 times button is disabled
-
             Info.setText("# of attemps remaining: " + String.valueOf(count));
-
             if(count==0){
                 Login.setEnabled(false); //disable button
             }
