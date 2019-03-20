@@ -56,7 +56,5 @@ public class MainActivity extends AppCompatActivity {
                 Login.setEnabled(false); //disable button
             }
         }
-
-
     }
 }
