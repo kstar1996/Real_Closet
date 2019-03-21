@@ -8,6 +8,6 @@ public class SliderActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(android.R.layout.activity_slider);
+        setContentView(R.layout.activity_slider);
     }
 }
