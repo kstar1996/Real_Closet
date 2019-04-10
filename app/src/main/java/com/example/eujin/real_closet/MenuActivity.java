@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -23,11 +24,26 @@ import java.util.Date;
 
 public class MenuActivity extends AppCompatActivity {
 
-    private static final int PICK_FROM_GALLERY = 1;
+    //Variables
+
+    private Button btnGallery;
+    private ImageView imageView;
+
+
+    private Uri filePath;
+
+
+
+
+
+
+    private static final int PICK_FROM_GALLERY;
+
+    static { PICK_FROM_GALLERY = 1; }
     private static final int PICK_FROM_CAMERA = 2;
     private static final String TAG = "Closet";
 
-    ImageButton camera, gallery;
+    ImageButton btn_camera, btn_gallery;
 
     private File tempFile;
 
@@ -36,10 +52,13 @@ public class MenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
-        camera = (ImageButton) findViewById(R.id.btnCamera);
-        gallery = (ImageButton) findViewById(R.id.btnGallery);
+        //init view
 
-        camera.setOnClickListener(new View.OnClickListener() {
+
+        btn_camera = (ImageButton) findViewById(R.id.btnCamera);
+        btn_gallery = (ImageButton) findViewById(R.id.btnGallery);
+
+        btn_camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 takePhoto();
@@ -47,7 +66,7 @@ public class MenuActivity extends AppCompatActivity {
             }
         });
 
-        gallery.setOnClickListener(new View.OnClickListener() {
+        btn_gallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
                 goToGallery();
