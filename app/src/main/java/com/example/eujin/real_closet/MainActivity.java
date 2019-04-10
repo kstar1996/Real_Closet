@@ -21,7 +21,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         Name=findViewById(R.id.etName);
         Password=findViewById((R.id.etPassword));
         Info=findViewById(R.id.tvInfo);

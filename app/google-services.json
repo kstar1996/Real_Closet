@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1040039475885",
+    "firebase_url": "https://closit-e9f0a.firebaseio.com",
+    "project_id": "closit-e9f0a",
+    "storage_bucket": "closit-e9f0a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1040039475885:android:c5e4db3d3094620f",
+        "android_client_info": {
+          "package_name": "com.example.eujin.real_closet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1040039475885-7rl4s23008p9m56g81soo3b0p4gvmskj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.eujin.real_closet",
+            "certificate_hash": "526f4dd600fc1ffde2f9439452c4c196d1586eac"
+          }
+        },
+        {
+          "client_id": "1040039475885-c6si1n74uq6lclmv32upk22sjtodfu9o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxQUgtyncRoyxeeHZkNzzSzsJsz6FVqfk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1040039475885-c6si1n74uq6lclmv32upk22sjtodfu9o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
