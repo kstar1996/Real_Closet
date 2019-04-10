@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".MenuActivity">
 
+
+
     <ImageButton
         android:id="@+id/btnCamera"
         android:layout_width="wrap_content"
