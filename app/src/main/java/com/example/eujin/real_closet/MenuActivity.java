@@ -33,6 +33,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
@@ -58,6 +59,8 @@ public class MenuActivity extends AppCompatActivity {
 
     private StorageReference mStorageRef;
     private DatabaseReference mDatabaseRef;
+
+    private StorageTask mUploadTask;
 
 
     @Override
@@ -86,7 +89,11 @@ public class MenuActivity extends AppCompatActivity {
         mButtonUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                uploadFile();
+                if (mUploadTask != null && mUploadTask.isInProgress()) {
+                    Toast.makeText(MenuActivity.this, "Upload in progress", Toast.LENGTH_SHORT).show();
+                } else {
+                    uploadFile();
+                }
             }
         });
 
@@ -135,10 +142,10 @@ public class MenuActivity extends AppCompatActivity {
 
         if (mImageUri != null) {//check if we actually chose image
             final StorageReference fileReference =mStorageRef.child(System.currentTimeMillis()
-            +"."+getFileExtension(mImageUri));
+                    +"."+getFileExtension(mImageUri));
 
 
-            fileReference.putFile(mImageUri)
+            mUploadTask=fileReference.putFile(mImageUri)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -148,7 +155,6 @@ public class MenuActivity extends AppCompatActivity {
                                 public void run() {
                                     mProgressBar.setProgress(0);
                                 }
-
                             }, 500);
                             Toast.makeText(MenuActivity.this,"Upload successful", Toast.LENGTH_LONG).show();
                             UploadActivity uploadActivity = new UploadActivity(mEditTextFileName.getText().toString().trim(),
@@ -175,22 +181,13 @@ public class MenuActivity extends AppCompatActivity {
                             mProgressBar.setProgress((int)progress);
                         }
                     });
-
-
         } else {
             Toast.makeText(this, "No file selected",Toast.LENGTH_SHORT).show();
 
 
 
-
-
         }
-
-
-
-
     }
-
 }
 
 
