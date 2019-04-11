@@ -25,9 +25,15 @@ import java.net.Inet4Address;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+
+
+
+
+
+/*
 public class MenuActivity extends AppCompatActivity {
 
-    //Variables
+
 
     private Button btnGallery;
     private ImageView imageView;
@@ -66,19 +72,10 @@ public class MenuActivity extends AppCompatActivity {
 
             }
         });
-        /*btn_gallery.setOnClickListener(new View.OnClickListener() {
+        btn_gallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
                 goToGallery();
-            }
-        });
-        */
-
-        btn_gallery.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
-            @Override
-            public void onClick(View view) {
-                chooseImage();
             }
         });
 
@@ -155,11 +152,11 @@ public class MenuActivity extends AppCompatActivity {
 
     }
 
-    /*private void goToGallery() {
+    private void goToGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
         startActivityForResult(intent, PICK_FROM_GALLERY);
-    }*/
+    }
 
     private void takePhoto(){
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -204,3 +201,5 @@ public class MenuActivity extends AppCompatActivity {
         tempFile = null;
     }
 }
+
+*/
