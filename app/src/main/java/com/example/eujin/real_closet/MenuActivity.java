@@ -157,10 +157,10 @@ public class MenuActivity extends AppCompatActivity {
                                 }
                             }, 500);
                             Toast.makeText(MenuActivity.this,"Upload successful", Toast.LENGTH_LONG).show();
-                            UploadActivity uploadActivity = new UploadActivity(mEditTextFileName.getText().toString().trim(),
+                            UploadActivity upload = new UploadActivity(mEditTextFileName.getText().toString().trim(),
                                     taskSnapshot.getStorage().getDownloadUrl().toString());//could be wrong
                             String uploadId = mDatabaseRef.push().getKey();
-                            mDatabaseRef.child(uploadId).setValue(uploadActivity);//could be wrong
+                            mDatabaseRef.child(uploadId).setValue(upload);//could be wrong
                             //should create new database entry
 
 
