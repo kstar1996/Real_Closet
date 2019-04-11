@@ -130,6 +130,9 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     private void uploadFile() {
+
+
+
         if (mImageUri != null) {//check if we actually chose image
             final StorageReference fileReference =mStorageRef.child(System.currentTimeMillis()
             +"."+getFileExtension(mImageUri));
@@ -146,10 +149,10 @@ public class MenuActivity extends AppCompatActivity {
                                     mProgressBar.setProgress(0);
                                 }
 
-                            }, 5000);
+                            }, 500);
                             Toast.makeText(MenuActivity.this,"Upload successful", Toast.LENGTH_LONG).show();
                             UploadActivity uploadActivity = new UploadActivity(mEditTextFileName.getText().toString().trim(),
-                                    fileReference.getDownloadUrl().toString());//could be wrong
+                                    taskSnapshot.getStorage().getDownloadUrl().toString());//could be wrong
                             String uploadId = mDatabaseRef.push().getKey();
                             mDatabaseRef.child(uploadId).setValue(uploadActivity);//could be wrong
                             //should create new database entry

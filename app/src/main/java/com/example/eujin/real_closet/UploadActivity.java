@@ -23,20 +23,20 @@ public class UploadActivity {
 
     }
 
-    public String getmName() {
+    public String getName() {
         return mName;
     }
 
-    public void setmName(String name){
+    public void setName(String name){
         mName=name;
 
     }
 
-    public String getmImageUrl(){
+    public String getImageUrl(){
         return mImageUrl;
     }
 
-    public void setmImageUrl(String imageUrl){
+    public void setImageUrl(String imageUrl){
         mImageUrl=imageUrl;
     }
 }
