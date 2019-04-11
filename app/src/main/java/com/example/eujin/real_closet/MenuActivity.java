@@ -29,8 +29,6 @@ import java.util.Date;
 
 
 
-
-/*
 public class MenuActivity extends AppCompatActivity {
 
 
@@ -201,5 +199,3 @@ public class MenuActivity extends AppCompatActivity {
         tempFile = null;
     }
 }
-
-*/
