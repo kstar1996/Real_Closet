@@ -1,10 +1,13 @@
 package com.example.eujin.real_closet;
 
 
+import com.google.firebase.database.Exclude;
+
 public class UploadActivity {
 
     private String mName;
     private String mImageUrl;
+    private String mKey;
 
 
     public UploadActivity(){
@@ -29,10 +32,7 @@ public class UploadActivity {
         return mName;
     }
 
-    public void setName(String name){
-        mName=name;
-
-    }
+    public void setName(String name){ mName=name; }
 
     public String getImageUrl(){
         return mImageUrl;
@@ -40,5 +40,15 @@ public class UploadActivity {
 
     public void setImageUrl(String imageUrl){
         mImageUrl=imageUrl;
+    }
+
+    @Exclude
+    public String getKey(){
+        return mKey;
+    }
+
+    @Exclude
+    public void setKey(String key){
+        mKey=key;
     }
 }
