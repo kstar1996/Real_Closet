@@ -61,7 +61,7 @@ public class MenuActivity extends AppCompatActivity {
         mProgressBar = findViewById(R.id.progress_bar);
 
         mStorageRef= FirebaseStorage.getInstance().getReference("uploads");
-        mDatabaseRef= FirebaseDatabase.getInstance().getReference("uploads");
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference("uploads");
 
         uploadBtn.setOnClickListener(new View.OnClickListener() {
             @Override
