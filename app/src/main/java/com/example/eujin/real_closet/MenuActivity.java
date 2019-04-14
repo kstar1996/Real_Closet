@@ -3,10 +3,14 @@ package com.example.eujin.real_closet;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
+import android.nfc.Tag;
 import android.os.Handler;
+import android.util.Log;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -19,6 +23,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -32,6 +37,8 @@ import com.squareup.picasso.Picasso;
 public class MenuActivity extends AppCompatActivity {
 
     private static final int PICK_IMAGE_REQUEST = 2; //any positive number
+
+    private static final String TAG = "MenuActivity";
 
     private ImageButton uploadBtn;
     private Button mButtonUpload;
@@ -142,11 +149,16 @@ public class MenuActivity extends AppCompatActivity {
                                 }
                             }, 500);
                             Toast.makeText(MenuActivity.this,"Upload successful", Toast.LENGTH_LONG).show();
-                            UploadActivity upload = new UploadActivity(mEditTextFileName.getText().toString().trim(),
-                                    taskSnapshot.getStorage().getDownloadUrl().toString());//could be wrong
+                            Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl();
+                            while (!urlTask.isSuccessful());
+                            Uri downloadUrl = urlTask.getResult();
+
+                            Log.d(TAG, "onSuccess:firebase download url:"+downloadUrl.toString());
+                            UploadActivity upload = new UploadActivity(mEditTextFileName.getText().toString().trim(),downloadUrl.toString());
+
                             String uploadId = mDatabaseRef.push().getKey();
-                            mDatabaseRef.child(uploadId).setValue(upload);//could be wrong
-                            //should create new database entry
+                            mDatabaseRef.child(uploadId).setValue(upload);
+
 
 
                         }

@@ -35,6 +35,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
         //use picasso
         Picasso.with(mContext)
                 .load(uploadCurrent.getImageUrl())
+                .placeholder(R.mipmap.ic_launcher)
                 .fit()//resize image to not full size image
                 .centerInside() //or centercrop
                 .into(holder.imagesView);
