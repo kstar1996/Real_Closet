@@ -10,6 +10,7 @@ public class UploadActivity {
     public UploadActivity(){
         //empty constructor needed
         //don't delete
+        //지우지마아아
 
     }
 
