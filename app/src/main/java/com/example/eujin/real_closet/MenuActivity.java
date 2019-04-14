@@ -31,7 +31,7 @@ import com.squareup.picasso.Picasso;
 
 public class MenuActivity extends AppCompatActivity {
 
-    private static final int PICK_IMAGE_REQUEST = 1; //any positive number
+    private static final int PICK_IMAGE_REQUEST = 2; //any positive number
 
     private ImageButton uploadBtn;
     private Button mButtonUpload;
