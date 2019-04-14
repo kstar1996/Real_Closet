@@ -43,7 +43,7 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
 
         mRecyclerView=findViewById(R.id.recycler_view);
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
 
         mProgressCircle=findViewById(R.id.progress_circle);
