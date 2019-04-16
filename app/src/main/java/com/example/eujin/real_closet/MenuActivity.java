@@ -93,6 +93,7 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     private void openFileChooser() {
+        // Open Gallery.
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -104,6 +105,8 @@ public class MenuActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK) {
+
+            // If image is selected, then get it and show it.
             if (requestCode == GET_IMAGE_FROM_GALLERY_REQUEST &&
                 data != null && data.getData() != null) {
                 mImageUri = data.getData();
@@ -122,14 +125,11 @@ public class MenuActivity extends AppCompatActivity {
 
     private void uploadFile() {
 
-
-
         if (mImageUri != null) {//check if we actually chose image
-            final StorageReference fileReference =mStorageRef.child(System.currentTimeMillis()
+            final StorageReference fileReference = mStorageRef.child(System.currentTimeMillis()
                     +"."+getFileExtension(mImageUri));
 
-
-            mUploadTask=fileReference.putFile(mImageUri)
+            mUploadTask = fileReference.putFile(mImageUri)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -140,27 +140,25 @@ public class MenuActivity extends AppCompatActivity {
                                     mProgressBar.setProgress(0);
                                 }
                             }, 500);
+
                             Toast.makeText(MenuActivity.this,"Upload successful", Toast.LENGTH_LONG).show();
+
                             Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl();
                             while (!urlTask.isSuccessful());
+
                             Uri downloadUrl = urlTask.getResult();
 
-                            Log.d(TAG, "onSuccess:firebase download url:"+downloadUrl.toString());
+                            Log.d(TAG, "onSuccess:firebase download url:" + downloadUrl.toString());
                             UploadActivity upload = new UploadActivity(mEditTextFileName.getText().toString().trim(),downloadUrl.toString());
 
                             String uploadId = mDatabaseRef.push().getKey();
                             mDatabaseRef.child(uploadId).setValue(upload);
-
-
-
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(MenuActivity.this, e.getMessage(),Toast.LENGTH_SHORT).show();
-
-
+                            Toast.makeText(MenuActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
@@ -171,8 +169,8 @@ public class MenuActivity extends AppCompatActivity {
                         }
                     });
         } else {
-            Toast.makeText(this, "No file selected",Toast.LENGTH_SHORT).show();
-
+            Toast.makeText(this, "No file selected", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(getApplicationContext(), "No file selected", Toast.LENGTH_SHORT).show();
         }
     }
 
