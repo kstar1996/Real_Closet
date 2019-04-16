@@ -34,6 +34,7 @@ import com.squareup.picasso.Picasso;
 public class MenuActivity extends AppCompatActivity {
 
     private static final int GET_IMAGE_FROM_GALLERY_REQUEST = 2; //any positive number
+    private static final int IMAGE_PROCESSING_REQUEST = 3;
 
     private static final String TAG = "MenuActivity";
 
@@ -44,7 +45,7 @@ public class MenuActivity extends AppCompatActivity {
     private ImageView mImageView;
     private ProgressBar mProgressBar;
 
-    private Uri mImageUri;
+    private Uri mProcessedImageUri;
 
     private StorageReference mStorageRef;
     private DatabaseReference mDatabaseRef;
@@ -106,13 +107,29 @@ public class MenuActivity extends AppCompatActivity {
 
         if (resultCode == RESULT_OK) {
 
-            // If image is selected, then get it and show it.
-            if (requestCode == GET_IMAGE_FROM_GALLERY_REQUEST &&
-                data != null && data.getData() != null) {
-                mImageUri = data.getData();
-                Picasso.with(this).load(mImageUri).into(mImageView);
+            switch (requestCode) {
+                case GET_IMAGE_FROM_GALLERY_REQUEST:
+                    if (data != null && data.getData() != null) {
+                        imageProcessing(data.getData());
+                    }
+                    break;
+                case IMAGE_PROCESSING_REQUEST:
+                    if (data != null) {
+                        Toast.makeText(this, "received", Toast.LENGTH_SHORT).show();
+                        mProcessedImageUri = Uri.parse(data.getStringExtra("processedUri"));
+                        Picasso.with(this).load(mProcessedImageUri).into(mImageView);
+                    }
+                    break;
             }
         }
+    }
+
+    private void imageProcessing(Uri originalImageUri) {
+        Toast.makeText(this, "Inside imageProcessing", Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(this, ProcessingResultActivity.class);
+        intent.putExtra("uri", originalImageUri.toString());
+        startActivityForResult(intent, IMAGE_PROCESSING_REQUEST);
     }
 
     private String getFileExtension(Uri uri){
@@ -125,11 +142,11 @@ public class MenuActivity extends AppCompatActivity {
 
     private void uploadFile() {
 
-        if (mImageUri != null) {//check if we actually chose image
+        if (mProcessedImageUri != null) {//check if we actually chose image
             final StorageReference fileReference = mStorageRef.child(System.currentTimeMillis()
-                    +"."+getFileExtension(mImageUri));
+                    +"."+getFileExtension(mProcessedImageUri));
 
-            mUploadTask = fileReference.putFile(mImageUri)
+            mUploadTask = fileReference.putFile(mProcessedImageUri)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -174,8 +191,12 @@ public class MenuActivity extends AppCompatActivity {
         }
     }
 
-    private void openImagesActivity(){
-        Intent intent=new Intent(this, ImagesActivity.class);
+    private void openProcessingResultActivity() {
+
+    }
+
+    private void openImagesActivity() {
+        Intent intent = new Intent(this, ImagesActivity.class);
         startActivity(intent);
     }
 }

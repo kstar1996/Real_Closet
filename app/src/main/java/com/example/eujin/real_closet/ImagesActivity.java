@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ImagesActivity extends AppCompatActivity implements ImageAdapter.OnItemClickListener{
+
     private RecyclerView mRecyclerView;
     private ImageAdapter mAdapter;
 
@@ -33,7 +34,6 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
 
     private ValueEventListener mDBListener;
     private List<UploadActivity> mUploads;//more flexible
-
 
 
     @Override
