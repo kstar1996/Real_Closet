@@ -8,32 +8,30 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-
-
 public class MainActivity extends AppCompatActivity {
 
-    private EditText Name;
-    private EditText Password;
-    private TextView Info;
-    private Button Login;
-    private int count = 5;
-
+    private static int count = 5;
+    private EditText mName;
+    private EditText mPassword;
+    private TextView mTextViewInfo;
+    private Button mButtonLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Name=findViewById(R.id.etName);
-        Password=findViewById((R.id.etPassword));
-        Info=findViewById(R.id.tvInfo);
-        Login=findViewById(R.id.btnLogin);
 
-        Info.setText("# of attempts remaining: 5");
+        mName =findViewById(R.id.etName);
+        mPassword =findViewById((R.id.etPassword));
+        mTextViewInfo =findViewById(R.id.tvInfo);
+        mButtonLogin =findViewById(R.id.btnLogin);
 
-        Login.setOnClickListener(new View.OnClickListener() {
+        mTextViewInfo.setText("# of attempts remaining: 5");
+
+        mButtonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                validate(Name.getText().toString(),Password.getText().toString());
+                validate(mName.getText().toString(), mPassword.getText().toString());
 
             }
         });
@@ -42,15 +40,14 @@ public class MainActivity extends AppCompatActivity {
     private void validate(String userName, String userPassword){
         if ((userName.equals("a")) && (userPassword.equals("a"))){
             Intent intent=new Intent(MainActivity.this, MenuActivity.class);
-            //start and destination
             startActivity(intent);
         }
 
         else{
             count--; //after 5 times button is disabled
-            Info.setText("# of attemps remaining: " + String.valueOf(count));
+            mTextViewInfo.setText("# of attemps remaining: " + String.valueOf(count));
             if(count==0){
-                Login.setEnabled(false); //disable button
+                mButtonLogin.setEnabled(false); //disable button
             }
         }
     }

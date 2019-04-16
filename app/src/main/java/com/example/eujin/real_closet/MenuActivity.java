@@ -51,7 +51,6 @@ public class MenuActivity extends AppCompatActivity {
 
     private StorageTask mUploadTask;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
