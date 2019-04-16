@@ -1,8 +1,7 @@
 package com.example.eujin.real_closet;
 
-import android.app.Dialog;
+
 import android.support.annotation.NonNull;
-import android.support.v4.widget.ImageViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;

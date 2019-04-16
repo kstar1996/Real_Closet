@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDialogFragment;
-import android.widget.TextView;
 
 public class DeleteDialogActivity extends AppCompatDialogFragment {
 
