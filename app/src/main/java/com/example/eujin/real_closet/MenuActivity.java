@@ -3,14 +3,11 @@ package com.example.eujin.real_closet;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
-import android.nfc.Tag;
 import android.os.Handler;
 import android.util.Log;
 import android.support.annotation.NonNull;
-import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -40,7 +37,7 @@ public class MenuActivity extends AppCompatActivity {
 
     private static final String TAG = "MenuActivity";
 
-    private ImageButton uploadBtn;
+    private ImageButton mButtonGallery;
     private Button mButtonUpload;
     private TextView mTextViewShowUploads;
     private EditText mEditTextFileName;
@@ -60,7 +57,7 @@ public class MenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
-        uploadBtn = findViewById(R.id.btnGallery);
+        mButtonGallery = findViewById(R.id.btnGallery);
         mButtonUpload = findViewById(R.id.btnUpload);
         mTextViewShowUploads = findViewById(R.id.my_closet);
         mEditTextFileName = findViewById(R.id.edit_name);
@@ -70,11 +67,10 @@ public class MenuActivity extends AppCompatActivity {
         mStorageRef= FirebaseStorage.getInstance().getReference("uploads");
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("uploads");
 
-        uploadBtn.setOnClickListener(new View.OnClickListener() {
+        mButtonGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openFileChooser();
-
             }
         });
 

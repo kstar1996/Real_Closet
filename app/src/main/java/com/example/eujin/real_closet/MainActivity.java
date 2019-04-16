@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
     }
 
     private void validate(String userName, String userPassword){
