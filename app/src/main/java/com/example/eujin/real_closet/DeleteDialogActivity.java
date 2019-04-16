@@ -33,12 +33,12 @@ public class DeleteDialogActivity extends AppCompatDialogFragment {
         return builder.create();
     }
 
+
     public interface DialogListener {
         void onYesClicked();
 
-
-
     }
+
 
     @Override
     public void onAttach(Context context) {

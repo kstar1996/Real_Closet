@@ -107,7 +107,7 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
 
         openDialog(); //dialog activity before actually deleting picture
 
-
+        onYesClicked();
         UploadActivity selectedItem = mUploads.get(position);
         final String selectedKey = selectedItem.getKey();
 
@@ -117,6 +117,7 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
             public void onSuccess(Void aVoid) {
                 mDatabaseRef.child(selectedKey).removeValue();
                 Toast.makeText(ImagesActivity.this, "Item deleted", Toast.LENGTH_SHORT).show();
+
 
             }
         });
@@ -140,7 +141,7 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
 
     @Override
     public void onYesClicked(){
-        Toast.makeText(this, "Yes clicked: ", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Yes clicked", Toast.LENGTH_SHORT).show();
 
     }
 }
