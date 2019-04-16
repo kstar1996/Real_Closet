@@ -44,7 +44,7 @@ dependencies {
 
 
     //cutout
-    implementation 'com.github.gabrielbb:cutout:0.1.2'
+    ///implementation 'com.github.gabrielbb:cutout:0.1.2'
 
 
 }
