@@ -13,7 +13,7 @@ public class MainActivity extends AppCompatActivity {
     private static int count = 5;
     private EditText mName;
     private EditText mPassword;
-    private TextView mTextViewInfo;
+    private TextView mInfo;
     private Button mButtonLogin;
 
     @Override
@@ -23,10 +23,10 @@ public class MainActivity extends AppCompatActivity {
 
         mName =findViewById(R.id.etName);
         mPassword =findViewById((R.id.etPassword));
-        mTextViewInfo =findViewById(R.id.tvInfo);
+        mInfo =findViewById(R.id.tvInfo);
         mButtonLogin =findViewById(R.id.btnLogin);
 
-        mTextViewInfo.setText("# of attempts remaining: 5");
+        mInfo.setText("# of attempts remaining: 5");
 
         mButtonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
         else{
             count--; //after 5 times button is disabled
-            mTextViewInfo.setText("# of attemps remaining: " + String.valueOf(count));
+            mInfo.setText("# of attemps remaining: " + String.valueOf(count));
             if(count==0){
                 mButtonLogin.setEnabled(false); //disable button
             }

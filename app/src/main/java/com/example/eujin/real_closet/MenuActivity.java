@@ -33,7 +33,7 @@ import com.squareup.picasso.Picasso;
 
 public class MenuActivity extends AppCompatActivity {
 
-    private static final int PICK_IMAGE_REQUEST = 2; //any positive number
+    private static final int GET_IMAGE_FROM_GALLERY_REQUEST = 2; //any positive number
 
     private static final String TAG = "MenuActivity";
 
@@ -92,26 +92,23 @@ public class MenuActivity extends AppCompatActivity {
         });
     }
 
-
-
     private void openFileChooser() {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+        startActivityForResult(intent, GET_IMAGE_FROM_GALLERY_REQUEST);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode==PICK_IMAGE_REQUEST&&resultCode==RESULT_OK
-                &&data!=null&&data.getData()!=null){
-            mImageUri=data.getData();
-
-            Picasso.with(this).load(mImageUri).into(mImageView);
-
-
+        if (resultCode == RESULT_OK) {
+            if (requestCode == GET_IMAGE_FROM_GALLERY_REQUEST &&
+                data != null && data.getData() != null) {
+                mImageUri = data.getData();
+                Picasso.with(this).load(mImageUri).into(mImageView);
+            }
         }
     }
 
