@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.github.gabrielbb.cutout.CutOut;
+
 public class ProcessingResultActivity extends AppCompatActivity {
 
     private Button mButtonOK;
@@ -23,6 +25,8 @@ public class ProcessingResultActivity extends AppCompatActivity {
         mButtonOK = findViewById(R.id.btnOK);
 
         mOriginalImageUri = Uri.parse(getIntent().getStringExtra("uri"));
+
+        CutOut.activity().start(this);
 
         mButtonOK.setOnClickListener(new View.OnClickListener() {
             @Override
