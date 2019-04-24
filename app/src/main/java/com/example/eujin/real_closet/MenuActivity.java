@@ -26,12 +26,19 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.ml.vision.FirebaseVision;
+import com.google.firebase.ml.vision.common.FirebaseVisionImage;
+import com.google.firebase.ml.vision.label.FirebaseVisionImageLabel;
+import com.google.firebase.ml.vision.label.FirebaseVisionImageLabeler;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
+
+import java.io.IOException;
+import java.util.List;
 
 
 public class MenuActivity extends AppCompatActivity {
@@ -113,8 +120,34 @@ public class MenuActivity extends AppCompatActivity {
             switch (requestCode) {
                 case CutOut.CUTOUT_ACTIVITY_REQUEST_CODE:
                     mProcessedImageUri = CutOut.getUri(data); // Get image.
-                    // Use firebase ML kit. (image labeling)
 
+                    // Use firebase ML kit. (image labeling)
+                    try {
+                        FirebaseVisionImage image = FirebaseVisionImage.fromFilePath(getApplicationContext(), mProcessedImageUri);
+                        FirebaseVisionImageLabeler labeler = FirebaseVision.getInstance().getOnDeviceImageLabeler();
+                        labeler.processImage(image).addOnSuccessListener(new OnSuccessListener<List<FirebaseVisionImageLabel>>() {
+                            @Override
+                            public void onSuccess(List<FirebaseVisionImageLabel> firebaseVisionImageLabels) {
+                                // Task completed successfully
+                                for (FirebaseVisionImageLabel label: firebaseVisionImageLabels) {
+                                    String text = label.getText();
+                                    String entityId = label.getEntityId();
+                                    float confidence = label.getConfidence();
+                                    String msg = "text:" + text + ", entityId:" + entityId + ", conf:" + confidence;
+                                    Toast.makeText(MenuActivity.this, msg, Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                // Task failed with an exception
+                                // ...
+                            }
+                        });
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
 
                     Picasso.with(this).load(mProcessedImageUri).into(mImageView);
                     break;
