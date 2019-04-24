@@ -2,12 +2,14 @@ package com.example.eujin.real_closet;
 
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Handler;
 import android.util.Log;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -18,6 +20,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.gabrielbb.cutout.CutOut;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -70,7 +73,8 @@ public class MenuActivity extends AppCompatActivity {
         mButtonGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openFileChooser();
+                CutOut.activity().bordered(Color.BLUE).start(MenuActivity.this);
+//                openFileChooser();
             }
         });
 
@@ -93,44 +97,50 @@ public class MenuActivity extends AppCompatActivity {
         });
     }
 
-    private void openFileChooser() {
-        // Open Gallery.
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent, GET_IMAGE_FROM_GALLERY_REQUEST);
-    }
+//    private void openFileChooser() {
+//        // Open Gallery. Not used.
+//        Intent intent = new Intent();
+//        intent.setType("image/*");
+//        intent.setAction(Intent.ACTION_GET_CONTENT);
+//        startActivityForResult(intent, GET_IMAGE_FROM_GALLERY_REQUEST);
+//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK) {
-
             switch (requestCode) {
-                case GET_IMAGE_FROM_GALLERY_REQUEST:
-                    if (data != null && data.getData() != null) {
-                        imageProcessing(data.getData());
-                    }
+                case CutOut.CUTOUT_ACTIVITY_REQUEST_CODE:
+                    mProcessedImageUri = CutOut.getUri(data); // Get image.
+                    // Use firebase ML kit. (image labeling)
+
+
+                    Picasso.with(this).load(mProcessedImageUri).into(mImageView);
                     break;
-                case IMAGE_PROCESSING_REQUEST:
-                    if (data != null) {
-                        Toast.makeText(this, "received", Toast.LENGTH_SHORT).show();
-                        mProcessedImageUri = Uri.parse(data.getStringExtra("processedUri"));
-                        Picasso.with(this).load(mProcessedImageUri).into(mImageView);
-                    }
-                    break;
+//                case GET_IMAGE_FROM_GALLERY_REQUEST:
+//                    if (data != null && data.getData() != null) {
+//                        imageProcessing(data.getData());
+//                    }
+//                    break;
+//                case IMAGE_PROCESSING_REQUEST:
+//                    if (data != null) {
+//                        Toast.makeText(this, "received", Toast.LENGTH_SHORT).show();
+//                        mProcessedImageUri = Uri.parse(data.getStringExtra("processedUri"));
+//                        Picasso.with(this).load(mProcessedImageUri).into(mImageView);
+//                    }
+//                    break;
             }
         }
     }
 
-    private void imageProcessing(Uri originalImageUri) {
-        Toast.makeText(this, "Inside imageProcessing", Toast.LENGTH_SHORT).show();
-
-        Intent intent = new Intent(this, ProcessingResultActivity.class);
-        intent.putExtra("uri", originalImageUri.toString());
-        startActivityForResult(intent, IMAGE_PROCESSING_REQUEST);
-    }
+//    private void imageProcessing(Uri originalImageUri) {
+//        Toast.makeText(this, "Inside imageProcessing", Toast.LENGTH_SHORT).show();
+//
+//        Intent intent = new Intent(this, ProcessingResultActivity.class);
+//        intent.putExtra("uri", originalImageUri.toString());
+//        startActivityForResult(intent, IMAGE_PROCESSING_REQUEST);
+//    }
 
     private String getFileExtension(Uri uri){
         ContentResolver cR =getContentResolver();
@@ -189,10 +199,6 @@ public class MenuActivity extends AppCompatActivity {
             Toast.makeText(this, "No file selected", Toast.LENGTH_SHORT).show();
             // Toast.makeText(getApplicationContext(), "No file selected", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    private void openProcessingResultActivity() {
-
     }
 
     private void openImagesActivity() {

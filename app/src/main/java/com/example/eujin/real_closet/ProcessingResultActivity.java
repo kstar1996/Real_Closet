@@ -26,7 +26,7 @@ public class ProcessingResultActivity extends AppCompatActivity {
 
         mOriginalImageUri = Uri.parse(getIntent().getStringExtra("uri"));
 
-        CutOut.activity().start(this);
+
 
         mButtonOK.setOnClickListener(new View.OnClickListener() {
             @Override
