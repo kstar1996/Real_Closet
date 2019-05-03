@@ -24,7 +24,10 @@ import java.util.List;
 
 public class ImagesActivity extends AppCompatActivity implements ImageAdapter.OnItemClickListener, DeleteDialogActivity.DialogListener {
 
-    private RecyclerView mRecyclerView;
+    private RecyclerView mRecyclerViewTop;
+    private RecyclerView mRecyclerViewBottom;
+    private RecyclerView mRecyclerViewBBottom;
+
     private ImageAdapter mAdapter;
 
     private ProgressBar mProgressCircle;
@@ -41,9 +44,17 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_images);
 
-        mRecyclerView = findViewById(R.id.recycler_view);
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        mRecyclerViewTop = findViewById(R.id.recycler_view_top);
+        mRecyclerViewTop.setHasFixedSize(true);
+        mRecyclerViewTop.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+
+        mRecyclerViewBottom=findViewById(R.id.recycler_view_bottom);
+        mRecyclerViewBottom.setHasFixedSize(true);
+        mRecyclerViewBottom.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+
+        mRecyclerViewBBottom=findViewById(R.id.recycler_view_bbottom);
+        mRecyclerViewBBottom.setHasFixedSize(true);
+        mRecyclerViewBBottom.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
 
         mProgressCircle = findViewById(R.id.progress_circle);
@@ -51,7 +62,9 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
 
         mAdapter = new ImageAdapter(ImagesActivity.this, mUploads);
 
-        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerViewTop.setAdapter(mAdapter);
+        mRecyclerViewBottom.setAdapter(mAdapter);
+        mRecyclerViewBBottom.setAdapter(mAdapter);
 
         mAdapter.setOnItemClickListener(ImagesActivity.this);
 
@@ -117,7 +130,6 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
             public void onSuccess(Void aVoid) {
                 mDatabaseRef.child(selectedKey).removeValue();
                 Toast.makeText(ImagesActivity.this, "Item deleted", Toast.LENGTH_SHORT).show();
-
 
             }
         });
