@@ -80,7 +80,7 @@ public class MenuActivity extends AppCompatActivity {
         mButtonGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CutOut.activity().bordered(Color.BLUE).start(MenuActivity.this);
+                CutOut.activity().start(MenuActivity.this);
 //                openFileChooser();
             }
         });

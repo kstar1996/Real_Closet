@@ -54,6 +54,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
 
     implementation 'com.github.gabrielbb:cutout:0.1.2' //cutout
+
+    implementation 'com.google.firebase:firebase-ml-model-interpreter:18.0.0'
 }
 
 
