@@ -2,13 +2,13 @@ package com.example.eujin.real_closet;
 
 import android.content.ContentResolver;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -27,6 +27,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
+import com.google.firebase.ml.vision.label.FirebaseVisionCloudImageLabelerOptions;
 import com.google.firebase.ml.vision.label.FirebaseVisionImageLabel;
 import com.google.firebase.ml.vision.label.FirebaseVisionImageLabeler;
 import com.google.firebase.storage.FirebaseStorage;
@@ -37,6 +38,7 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -44,6 +46,13 @@ public class MenuActivity extends AppCompatActivity {
 
     private static final int GET_IMAGE_FROM_GALLERY_REQUEST = 2; //any positive number
     private static final int IMAGE_PROCESSING_REQUEST = 3;
+
+    private static final int CLOTHES_TYPE_AMBIGUOUS = 0;
+    private static final int CLOTHES_TYPE_TOP = 1;
+    private static final int CLOTHES_TYPE_BOTTOM = 2;
+    private static final int CLOTHES_TYPE_ONE_PIECE = 3;
+
+    private static final String[] CLOTHES_TYPE_TO_STRING = {"Ambiguous", "Top", "Bottom", "One Piece"};
 
     private static final String TAG = "MenuActivity";
 
@@ -55,6 +64,7 @@ public class MenuActivity extends AppCompatActivity {
     private ProgressBar mProgressBar;
 
     private Uri mProcessedImageUri;
+    private int mClothesType;
 
     private StorageReference mStorageRef;
     private DatabaseReference mDatabaseRef;
@@ -72,6 +82,7 @@ public class MenuActivity extends AppCompatActivity {
         mEditTextFileName = findViewById(R.id.edit_name);
         mImageView = findViewById(R.id.image_view);
         mProgressBar = findViewById(R.id.progress_bar);
+        mClothesType = CLOTHES_TYPE_AMBIGUOUS; // INIT
 
         mStorageRef= FirebaseStorage.getInstance().getReference("uploads");
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("uploads");
@@ -123,18 +134,75 @@ public class MenuActivity extends AppCompatActivity {
                     // Use firebase ML kit. (image labeling)
                     try {
                         FirebaseVisionImage image = FirebaseVisionImage.fromFilePath(getApplicationContext(), mProcessedImageUri);
-                        FirebaseVisionImageLabeler labeler = FirebaseVision.getInstance().getOnDeviceImageLabeler();
+                        FirebaseVisionCloudImageLabelerOptions options = new FirebaseVisionCloudImageLabelerOptions.Builder().setConfidenceThreshold(0.5f).build();
+
+                        FirebaseVisionImageLabeler labeler = FirebaseVision.getInstance().getCloudImageLabeler(options);
                         labeler.processImage(image).addOnSuccessListener(new OnSuccessListener<List<FirebaseVisionImageLabel>>() {
                             @Override
                             public void onSuccess(List<FirebaseVisionImageLabel> firebaseVisionImageLabels) {
                                 // Task completed successfully
+                                ArrayList<String> textArray = new ArrayList<String>();
                                 for (FirebaseVisionImageLabel label: firebaseVisionImageLabels) {
+//                                    String text = label.getText();
+//                                    String entityId = label.getEntityId();
+//                                    float confidence = label.getConfidence();
+//                                    String msg = "text:" + text + ", entityId:" + entityId + ", conf:" + confidence;
+//                                    Toast.makeText(MenuActivity.this, msg, Toast.LENGTH_LONG).show();
+
                                     String text = label.getText();
-                                    String entityId = label.getEntityId();
-                                    float confidence = label.getConfidence();
-                                    String msg = "text:" + text + ", entityId:" + entityId + ", conf:" + confidence;
-                                    Toast.makeText(MenuActivity.this, msg, Toast.LENGTH_LONG).show();
+                                    textArray.add(text);
                                 }
+                                int cntTop = 0, cntBottom = 0, cntOnePiece = 0;
+                                for (String type : textArray) {
+                                    switch (type) {
+                                        case "Hood":
+                                        case "Outerwear":
+                                        case "Hoodie":
+                                        case "Top":
+                                        case "Shirt":
+                                        case "T-shirt":
+                                        case "Sleeve":
+                                        case "Blouse":
+                                        case "Jersey":
+                                        case "Polo Shirt":
+                                        case "Sweater":
+                                            cntTop++;
+                                            break;
+                                        case "Pants":
+                                        case "Denim":
+                                        case "Jeans":
+                                        case "Shorts":
+                                        case "Board Short":
+                                        case "Trunks":
+                                        case "Trousers":
+                                        case "Pocket":
+                                            cntBottom++;
+                                            break;
+                                        case "Dress":
+                                        case "Day Dress":
+                                        case "Cocktail Dress":
+                                        case "Bridal Party Dress":
+                                        case "A-line":
+                                        case "One-piece Garment":
+                                        case "Jacket":
+                                        case "Coat":
+                                        case "Blazer":
+                                        case "Suit":
+                                        case "Overcoat":
+                                        case "Parka":
+                                            cntOnePiece++;
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                }
+
+                                if (cntTop > cntBottom && cntTop > cntOnePiece) mClothesType = CLOTHES_TYPE_TOP;
+                                else if (cntBottom > cntTop && cntBottom > cntOnePiece) mClothesType = CLOTHES_TYPE_BOTTOM;
+                                else if (cntOnePiece > cntTop && cntOnePiece > cntBottom) mClothesType = CLOTHES_TYPE_ONE_PIECE;
+                                else mClothesType = CLOTHES_TYPE_AMBIGUOUS;
+
+                                Toast.makeText(MenuActivity.this, CLOTHES_TYPE_TO_STRING[mClothesType] + ":" + cntTop + ", " + cntBottom + ", " + cntOnePiece, Toast.LENGTH_LONG).show();
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
@@ -183,6 +251,8 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     private void uploadFile() {
+        // 여기서 mClothesType 종류에 따라서 파일 이름 다르게 설정하고 업로드 하면 됨.
+        // mClothesType = ambiguous 하다면 타입을 직접 선택할 수 있도록 select box 하나 넣는것도 괜찮을 듯 함.
 
         if (mProcessedImageUri != null) {//check if we actually chose image
             final StorageReference fileReference = mStorageRef.child(System.currentTimeMillis()
