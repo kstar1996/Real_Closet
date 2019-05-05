@@ -36,7 +36,7 @@
             android:orientation="horizontal" />
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view_bbottom"
+            android:id="@+id/recycler_view_one"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal" />

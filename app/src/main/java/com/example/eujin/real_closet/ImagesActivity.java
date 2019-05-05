@@ -26,17 +26,32 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
 
     private RecyclerView mRecyclerViewTop;
     private RecyclerView mRecyclerViewBottom;
-    private RecyclerView mRecyclerViewBBottom;
+    private RecyclerView mRecyclerViewOne;
 
-    private ImageAdapter mAdapter;
+    private ImageAdapter mAdapterTop;
+    private ImageAdapter mAdapterBottom;
+    private ImageAdapter mAdapterOne;
+
 
     private ProgressBar mProgressCircle;
 
-    private FirebaseStorage mStorage;
-    private DatabaseReference mDatabaseRef;//get items and fill into list
+    private FirebaseStorage mStorageTop;
+    private FirebaseStorage mStorageBottom;
+    private FirebaseStorage mStorageOne;
 
-    private ValueEventListener mDBListener;
-    private List<UploadActivity> mUploads;//more flexible
+    private DatabaseReference mDatabaseTop;//get items and fill into list
+    private DatabaseReference mDatabaseBottom;
+    private DatabaseReference mDatabaseOne;
+
+
+    private ValueEventListener mDBListenerTop;
+    private ValueEventListener mDBListenerBottom;
+    private ValueEventListener mDBListenerOne;
+
+
+    private List<UploadActivity> mUploadsTop;//more flexible
+    private List<UploadActivity> mUploadsBottom;
+    private List<UploadActivity> mUploadsOne;
 
 
     @Override
@@ -52,42 +67,113 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
         mRecyclerViewBottom.setHasFixedSize(true);
         mRecyclerViewBottom.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
-        mRecyclerViewBBottom=findViewById(R.id.recycler_view_bbottom);
-        mRecyclerViewBBottom.setHasFixedSize(true);
-        mRecyclerViewBBottom.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        mRecyclerViewOne =findViewById(R.id.recycler_view_one);
+        mRecyclerViewOne.setHasFixedSize(true);
+        mRecyclerViewOne.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
 
         mProgressCircle = findViewById(R.id.progress_circle);
-        mUploads = new ArrayList<>();//initialize as arraylist
+        mUploadsTop = new ArrayList<>();//initialize as arraylist
+        mUploadsBottom = new ArrayList<>();//initialize as arraylist
+        mUploadsOne = new ArrayList<>();//initialize as arraylist
 
-        mAdapter = new ImageAdapter(ImagesActivity.this, mUploads);
+        mAdapterTop = new ImageAdapter(ImagesActivity.this, mUploadsTop);
+        mAdapterBottom = new ImageAdapter(ImagesActivity.this, mUploadsBottom);
+        mAdapterOne = new ImageAdapter(ImagesActivity.this, mUploadsOne);
 
-        mRecyclerViewTop.setAdapter(mAdapter);
-        mRecyclerViewBottom.setAdapter(mAdapter);
-        mRecyclerViewBBottom.setAdapter(mAdapter);
+        mRecyclerViewTop.setAdapter(mAdapterTop);
+        mRecyclerViewBottom.setAdapter(mAdapterBottom);
+        mRecyclerViewOne.setAdapter(mAdapterOne);
 
-        mAdapter.setOnItemClickListener(ImagesActivity.this);
+        mAdapterTop.setOnItemClickListener(ImagesActivity.this);
+        mAdapterBottom.setOnItemClickListener(ImagesActivity.this);
+        mAdapterOne.setOnItemClickListener(ImagesActivity.this);
 
-        mStorage = FirebaseStorage.getInstance();
+        mStorageTop = FirebaseStorage.getInstance();
+        mStorageBottom = FirebaseStorage.getInstance();
+        mStorageOne = FirebaseStorage.getInstance();
 
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("uploads");
+        mDatabaseTop = FirebaseDatabase.getInstance().getReference("top");
+        mDatabaseBottom = FirebaseDatabase.getInstance().getReference("bottom");
+        mDatabaseOne = FirebaseDatabase.getInstance().getReference("one");
 
-        mDBListener = mDatabaseRef.addValueEventListener(new ValueEventListener() {
+
+        mDBListenerTop = mDatabaseTop.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                mUploads.clear();
+                mUploadsTop.clear();
 
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     UploadActivity uploadActivity = postSnapshot.getValue(UploadActivity.class);
 
                     uploadActivity.setKey(postSnapshot.getKey());
 
-                    mUploads.add(uploadActivity);
+                    mUploadsTop.add(uploadActivity);
 
                 }
 
-                mAdapter.notifyDataSetChanged();
+                mAdapterTop.notifyDataSetChanged();
+
+                mProgressCircle.setVisibility(View.INVISIBLE);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(ImagesActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                mProgressCircle.setVisibility(View.INVISIBLE);
+            }
+        });
+
+
+        mDBListenerBottom = mDatabaseBottom.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                mUploadsBottom.clear();
+
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    UploadActivity uploadActivity = postSnapshot.getValue(UploadActivity.class);
+
+                    uploadActivity.setKey(postSnapshot.getKey());
+
+                    mUploadsBottom.add(uploadActivity);
+
+                }
+
+                mAdapterBottom.notifyDataSetChanged();
+
+                mProgressCircle.setVisibility(View.INVISIBLE);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(ImagesActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                mProgressCircle.setVisibility(View.INVISIBLE);
+            }
+        });
+
+
+
+
+        mDBListenerOne = mDatabaseOne.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                mUploadsOne.clear();
+
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    UploadActivity uploadActivity = postSnapshot.getValue(UploadActivity.class);
+
+                    uploadActivity.setKey(postSnapshot.getKey());
+
+                    mUploadsOne.add(uploadActivity);
+
+                }
+
+                mAdapterOne.notifyDataSetChanged();
 
                 mProgressCircle.setVisibility(View.INVISIBLE);
 
@@ -121,14 +207,45 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
         openDialog(); //dialog activity before actually deleting picture
 
         onYesClicked();
-        UploadActivity selectedItem = mUploads.get(position);
-        final String selectedKey = selectedItem.getKey();
+        UploadActivity selectedItemTop = mUploadsTop.get(position);
+        UploadActivity selectedItemBottom = mUploadsBottom.get(position);
+        UploadActivity selectedItemOne = mUploadsOne.get(position);
 
-        StorageReference imageRef = mStorage.getReferenceFromUrl(selectedItem.getImageUrl());
-        imageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+        final String selectedKeyTop = selectedItemTop.getKey();
+        final String selectedKeyBottom = selectedItemBottom.getKey();
+        final String selectedKeyOne = selectedItemOne.getKey();
+
+        StorageReference imageRefTop = mStorageTop.getReferenceFromUrl(selectedItemTop.getImageUrl());
+        StorageReference imageRefBottom = mStorageBottom.getReferenceFromUrl(selectedItemBottom.getImageUrl());
+        StorageReference imageRefOne = mStorageOne.getReferenceFromUrl(selectedItemOne.getImageUrl());
+
+        imageRefTop.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                mDatabaseRef.child(selectedKey).removeValue();
+                mDatabaseTop.child(selectedKeyTop).removeValue();
+
+                Toast.makeText(ImagesActivity.this, "Item deleted", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+
+        imageRefBottom.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                mDatabaseBottom.child(selectedKeyBottom).removeValue();
+
+                Toast.makeText(ImagesActivity.this, "Item deleted", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        imageRefOne.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+
+                mDatabaseOne.child(selectedKeyOne).removeValue();
+
                 Toast.makeText(ImagesActivity.this, "Item deleted", Toast.LENGTH_SHORT).show();
 
             }
@@ -142,7 +259,9 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mDatabaseRef.removeEventListener(mDBListener);
+        mDatabaseTop.removeEventListener(mDBListenerTop);
+        mDatabaseBottom.removeEventListener(mDBListenerBottom);
+        mDatabaseOne.removeEventListener(mDBListenerOne);
     }
 
     public void openDialog(){
