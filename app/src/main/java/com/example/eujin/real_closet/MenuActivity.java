@@ -67,8 +67,13 @@ public class MenuActivity extends AppCompatActivity {
     private Uri mProcessedImageUri;
     private int mClothesType;
 
-    private StorageReference mStorageRef;
-    private DatabaseReference mDatabaseRef;
+    private StorageReference mStorageTop;
+    private StorageReference mStorageBottom;
+    private StorageReference mStorageOne;
+
+    private DatabaseReference mDatabaseTop;
+    private DatabaseReference mDatabaseBottom;
+    private DatabaseReference mDatabaseOne;
 
     private StorageTask mUploadTask;
 
@@ -85,8 +90,19 @@ public class MenuActivity extends AppCompatActivity {
         mProgressBar = findViewById(R.id.progress_bar);
         mClothesType = CLOTHES_TYPE_AMBIGUOUS; // INIT
 
-        mStorageRef= FirebaseStorage.getInstance().getReference("uploads");
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("uploads");
+        mStorageTop= FirebaseStorage.getInstance().getReference("top");//save in folder top
+        mDatabaseTop = FirebaseDatabase.getInstance().getReference("top");
+
+
+        mStorageBottom= FirebaseStorage.getInstance().getReference("bottom");//save in folder bottom
+        mDatabaseBottom = FirebaseDatabase.getInstance().getReference("bottom");
+
+
+        mStorageOne= FirebaseStorage.getInstance().getReference("one");//save in folder one
+        mDatabaseOne = FirebaseDatabase.getInstance().getReference("one");
+
+
+
 
         mButtonGallery.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -258,48 +274,155 @@ public class MenuActivity extends AppCompatActivity {
         // mClothesType = ambiguous 하다면 타입을 직접 선택할 수 있도록 select box 하나 넣는것도 괜찮을 듯 함.
 
         if (mProcessedImageUri != null) {//check if we actually chose image
-            final StorageReference fileReference = mStorageRef.child(System.currentTimeMillis()
-                    +"."+getFileExtension(mProcessedImageUri));
 
-            mUploadTask = fileReference.putFile(mProcessedImageUri)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            Handler handler = new Handler();
-                            handler.postDelayed(new Runnable() {
+            switch(mClothesType){
+                case CLOTHES_TYPE_TOP:
+                    final StorageReference TopReference = mStorageTop.child(System.currentTimeMillis()
+                            +"."+getFileExtension(mProcessedImageUri));
+
+
+                    mUploadTask = TopReference.putFile(mProcessedImageUri)
+                            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                 @Override
-                                public void run() {
-                                    mProgressBar.setProgress(0);
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    Handler handler = new Handler();
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            mProgressBar.setProgress(0);
+                                        }
+                                    }, 500);
+
+                                    Toast.makeText(MenuActivity.this,"Upload successful", Toast.LENGTH_LONG).show();
+
+                                    Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl();
+                                    while (!urlTask.isSuccessful());
+
+                                    Uri downloadUrl = urlTask.getResult();
+
+                                    Log.d(TAG, "onSuccess:firebase download url:" + downloadUrl.toString());
+                                    UploadActivity upload = new UploadActivity(mEditTextFileName.getText().toString().trim(),downloadUrl.toString());
+
+                                    String uploadId = mDatabaseTop.push().getKey();
+                                    mDatabaseTop.child(uploadId).setValue(upload);
                                 }
-                            }, 500);
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(MenuActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            })
+                            .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                                    double progress=(100.0*taskSnapshot.getBytesTransferred()/taskSnapshot.getTotalByteCount());
+                                    mProgressBar.setProgress((int)progress);
+                                }
+                            });
 
-                            Toast.makeText(MenuActivity.this,"Upload successful", Toast.LENGTH_LONG).show();
+                    break;
 
-                            Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl();
-                            while (!urlTask.isSuccessful());
+                case CLOTHES_TYPE_BOTTOM:
+                    final StorageReference BottomReference = mStorageBottom.child(System.currentTimeMillis()
+                            +"."+getFileExtension(mProcessedImageUri));
 
-                            Uri downloadUrl = urlTask.getResult();
 
-                            Log.d(TAG, "onSuccess:firebase download url:" + downloadUrl.toString());
-                            UploadActivity upload = new UploadActivity(mEditTextFileName.getText().toString().trim(),downloadUrl.toString());
+                    mUploadTask = BottomReference.putFile(mProcessedImageUri)
+                            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    Handler handler = new Handler();
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            mProgressBar.setProgress(0);
+                                        }
+                                    }, 500);
 
-                            String uploadId = mDatabaseRef.push().getKey();
-                            mDatabaseRef.child(uploadId).setValue(upload);
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(MenuActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            double progress=(100.0*taskSnapshot.getBytesTransferred()/taskSnapshot.getTotalByteCount());
-                            mProgressBar.setProgress((int)progress);
-                        }
-                    });
+                                    Toast.makeText(MenuActivity.this,"Upload successful", Toast.LENGTH_LONG).show();
+
+                                    Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl();
+                                    while (!urlTask.isSuccessful());
+
+                                    Uri downloadUrl = urlTask.getResult();
+
+                                    Log.d(TAG, "onSuccess:firebase download url:" + downloadUrl.toString());
+                                    UploadActivity upload = new UploadActivity(mEditTextFileName.getText().toString().trim(),downloadUrl.toString());
+
+                                    String uploadId = mDatabaseBottom.push().getKey();
+                                    mDatabaseBottom.child(uploadId).setValue(upload);
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(MenuActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            })
+                            .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                                    double progress=(100.0*taskSnapshot.getBytesTransferred()/taskSnapshot.getTotalByteCount());
+                                    mProgressBar.setProgress((int)progress);
+                                }
+                            });
+
+
+                    break;
+
+                case CLOTHES_TYPE_ONE_PIECE:
+                    final StorageReference OneReference = mStorageBottom.child(System.currentTimeMillis()
+                            +"."+getFileExtension(mProcessedImageUri));
+
+
+                    mUploadTask = OneReference.putFile(mProcessedImageUri)
+                            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    Handler handler = new Handler();
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            mProgressBar.setProgress(0);
+                                        }
+                                    }, 500);
+
+                                    Toast.makeText(MenuActivity.this,"Upload successful", Toast.LENGTH_LONG).show();
+
+                                    Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl();
+                                    while (!urlTask.isSuccessful());
+
+                                    Uri downloadUrl = urlTask.getResult();
+
+                                    Log.d(TAG, "onSuccess:firebase download url:" + downloadUrl.toString());
+                                    UploadActivity upload = new UploadActivity(mEditTextFileName.getText().toString().trim(),downloadUrl.toString());
+
+                                    String uploadId = mDatabaseBottom.push().getKey();
+                                    mDatabaseBottom.child(uploadId).setValue(upload);
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(MenuActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            })
+                            .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                                    double progress=(100.0*taskSnapshot.getBytesTransferred()/taskSnapshot.getTotalByteCount());
+                                    mProgressBar.setProgress((int)progress);
+                                }
+                            });
+
+
+
+                    break;
+
+            }
+
+
         } else {
             Toast.makeText(this, "No file selected", Toast.LENGTH_SHORT).show();
             // Toast.makeText(getApplicationContext(), "No file selected", Toast.LENGTH_SHORT).show();

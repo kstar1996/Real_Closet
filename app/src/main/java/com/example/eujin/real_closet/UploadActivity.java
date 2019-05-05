@@ -19,11 +19,12 @@ public class UploadActivity {
 
     public UploadActivity(String name, String imageUrl){
 
-        if(name.trim().equals("")){
-            name="No Name";
-        }
+//        if(name.trim().equals("")){
+//            name="No Name";
+//        }
 
-        mName=name;
+
+        mName="";
         mImageUrl=imageUrl;
 
     }
