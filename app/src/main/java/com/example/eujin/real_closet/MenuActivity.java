@@ -59,6 +59,7 @@ public class MenuActivity extends AppCompatActivity {
     private ImageButton mButtonGallery;
     private Button mButtonUpload;
     private TextView mTextViewShowUploads;
+
     private EditText mEditTextFileName;
     private ImageView mImageView;
     private ProgressBar mProgressBar;
@@ -134,7 +135,7 @@ public class MenuActivity extends AppCompatActivity {
                     // Use firebase ML kit. (image labeling)
                     try {
                         FirebaseVisionImage image = FirebaseVisionImage.fromFilePath(getApplicationContext(), mProcessedImageUri);
-                        FirebaseVisionCloudImageLabelerOptions options = new FirebaseVisionCloudImageLabelerOptions.Builder().setConfidenceThreshold(0.5f).build();
+                        FirebaseVisionCloudImageLabelerOptions options = new FirebaseVisionCloudImageLabelerOptions.Builder().setConfidenceThreshold(0.7f).build();
 
                         FirebaseVisionImageLabeler labeler = FirebaseVision.getInstance().getCloudImageLabeler(options);
                         labeler.processImage(image).addOnSuccessListener(new OnSuccessListener<List<FirebaseVisionImageLabel>>() {
@@ -182,6 +183,8 @@ public class MenuActivity extends AppCompatActivity {
                                         case "Day Dress":
                                         case "Cocktail Dress":
                                         case "Bridal Party Dress":
+                                            cntOnePiece+=5;
+                                            break;
                                         case "A-line":
                                         case "One-piece Garment":
                                         case "Jacket":
