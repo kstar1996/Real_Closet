@@ -6,4 +6,8 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="login">LOGIN</string>
+    <string name="logout">Logout</string>
+    <string name="todo">TODO</string>
+    <string name="upload">UPLOAD</string>
+    <string name="my_closet">MY CLOSET</string>
 </resources>

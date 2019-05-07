@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.ui.auth.AuthMethodPickerLayout;
 import com.firebase.ui.auth.AuthUI;
 
 import com.facebook.FacebookSdk;
@@ -29,20 +30,47 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int MY_REQUEST_CODE = 7177; //any number
     List<AuthUI.IdpConfig> providers;
-    Button btn_signout;
+    private Button btn_signout;
+    private Button btn_closet;
+    private Button btn_upload;
 
+
+
+    /*
     private static int count = 5;
     private EditText mName;
     private EditText mPassword;
     private TextView mInfo;
     private Button mButtonLogin;
+    */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         btn_signout=(Button)findViewById(R.id.logout_btn);
+        btn_closet=(Button)findViewById(R.id.closetbtn);
+        btn_upload=(Button)findViewById(R.id.uploadbtn);
+
+        btn_closet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(MainActivity.this, ImagesActivity.class);
+                startActivity(intent);
+
+            }
+        });
+
+        btn_upload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(MainActivity.this, MenuActivity.class);
+                startActivity(intent);
+            }
+        });
+
         btn_signout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -76,17 +104,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showSignInOptions() {
-        startActivityForResult(
-                AuthUI.getInstance().createSignInIntentBuilder()
-                .setAvailableProviders(providers)
-                .setTheme(R.style.MyTheme)
-                .build(),MY_REQUEST_CODE
-        );
 
+        startActivityForResult(
+
+                AuthUI.getInstance().createSignInIntentBuilder()
+                        .setAvailableProviders(providers)
+                        .setLogo(R.drawable.lgo)
+                        .setTheme(R.style.MyTheme)
+                        .build(),MY_REQUEST_CODE
+
+        );
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
+
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==MY_REQUEST_CODE){
             IdpResponse response=IdpResponse.fromResultIntent(data);
@@ -103,6 +136,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+
 }
 
 
