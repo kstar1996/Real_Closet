@@ -14,6 +14,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+
+
+
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -31,7 +34,6 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
     private ImageAdapter mAdapterTop;
     private ImageAdapter mAdapterBottom;
     private ImageAdapter mAdapterOne;
-
 
     private ProgressBar mProgressCircle;
 
@@ -73,6 +75,7 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
 
 
         mProgressCircle = findViewById(R.id.progress_circle);
+
         mUploadsTop = new ArrayList<>();//initialize as arraylist
         mUploadsBottom = new ArrayList<>();//initialize as arraylist
         mUploadsOne = new ArrayList<>();//initialize as arraylist
@@ -114,6 +117,7 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
                 }
 
                 mAdapterTop.notifyDataSetChanged();
+
 
                 mProgressCircle.setVisibility(View.INVISIBLE);
 
@@ -188,25 +192,24 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
 
     }
 
+
+
     @Override
     public void onItemClick(int position) {
         Toast.makeText(this, "Normal click at position: " + position, Toast.LENGTH_SHORT).show();
-
     }
 
     @Override
     public void onInfoClick(int position) {
         Toast.makeText(this, "Info click at position: " + position, Toast.LENGTH_SHORT).show();//text at whatever click
-
-
     }
 
     @Override
     public void onDeleteClick(int position) {
 
-        openDialog(); //dialog activity before actually deleting picture
+//        openDialog(); //dialog activity before actually deleting picture
 
-        onYesClicked();
+//        onYesClicked();
         UploadActivity selectedItemTop = mUploadsTop.get(position);
         UploadActivity selectedItemBottom = mUploadsBottom.get(position);
         UploadActivity selectedItemOne = mUploadsOne.get(position);
@@ -216,8 +219,7 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
         final String selectedKeyOne = selectedItemOne.getKey();
 
         StorageReference imageRefTop = mStorageTop.getReferenceFromUrl(selectedItemTop.getImageUrl());
-        StorageReference imageRefBottom = mStorageBottom.getReferenceFromUrl(selectedItemBottom.getImageUrl());
-        StorageReference imageRefOne = mStorageOne.getReferenceFromUrl(selectedItemOne.getImageUrl());
+
 
         imageRefTop.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -229,6 +231,8 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
             }
         });
 
+        StorageReference imageRefBottom = mStorageBottom.getReferenceFromUrl(selectedItemBottom.getImageUrl());
+
 
         imageRefBottom.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -239,6 +243,8 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
 
             }
         });
+
+        StorageReference imageRefOne = mStorageOne.getReferenceFromUrl(selectedItemOne.getImageUrl());
 
         imageRefOne.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -255,10 +261,10 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
     }
 
 
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
         mDatabaseTop.removeEventListener(mDBListenerTop);
         mDatabaseBottom.removeEventListener(mDBListenerBottom);
         mDatabaseOne.removeEventListener(mDBListenerOne);

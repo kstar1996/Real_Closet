@@ -20,7 +20,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
     private Context mContext;
     private List<UploadActivity> mUploads;
 
-    private OnItemClickListener mListener;
+    private OnItemClickListener mListener; //take one with my package name in it
 
     public ImageAdapter(Context context, List<UploadActivity> uploads){
         mContext=context;
@@ -29,9 +29,15 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
 
     @Override
     public ImageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
         View v= LayoutInflater.from(mContext).inflate(R.layout.image_item,parent,false);
         return new ImageViewHolder(v);
     }
+
+    public void deleteItem(int position){
+
+    }
+
 
     @Override
     public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
@@ -64,9 +70,10 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
             imagesView=itemView.findViewById(R.id.image_view_upload);
 
             itemView.setOnClickListener(this);
-            itemView.setOnCreateContextMenuListener(this);
+            itemView.setOnCreateContextMenuListener(this);//have to implement since this
         }
 
+        //ctrl+i
         @Override
         public void onClick(View v) {
             if (mListener!=null){
@@ -82,7 +89,9 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
             menu.setHeaderTitle("Select Action");
 
             MenuItem Info=menu.add(Menu.NONE, 1, 1, "Info");
+
             MenuItem delete=menu.add(Menu.NONE,2,2,"Delete");
+
 
 
             Info.setOnMenuItemClickListener(this);
@@ -102,6 +111,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
                         case 1:
                             mListener.onInfoClick(position);
                             return true;
+
                         case 2:
                             mListener.onDeleteClick(position);
                             return true;
@@ -109,11 +119,10 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
                     }
                 }
             }
-
             return false;
         }
     }
-
+    //define 3 methods
     public interface OnItemClickListener{
         void onItemClick(int position);
 

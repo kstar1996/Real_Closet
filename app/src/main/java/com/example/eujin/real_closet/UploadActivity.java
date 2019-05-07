@@ -43,6 +43,7 @@ public class UploadActivity {
         mImageUrl=imageUrl;
     }
 
+    //exclude from firebase database
     @Exclude
     public String getKey(){
         return mKey;
