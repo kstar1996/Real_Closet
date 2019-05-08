@@ -372,7 +372,7 @@ public class MenuActivity extends AppCompatActivity {
                     break;
 
                 case CLOTHES_TYPE_ONE_PIECE:
-                    final StorageReference OneReference = mStorageBottom.child(System.currentTimeMillis()
+                    final StorageReference OneReference = mStorageOne.child(System.currentTimeMillis()
                             +"."+getFileExtension(mProcessedImageUri));
 
 
@@ -398,8 +398,8 @@ public class MenuActivity extends AppCompatActivity {
                                     Log.d(TAG, "onSuccess:firebase download url:" + downloadUrl.toString());
                                     UploadActivity upload = new UploadActivity(mEditTextFileName.getText().toString().trim(),downloadUrl.toString());
 
-                                    String uploadId = mDatabaseBottom.push().getKey();
-                                    mDatabaseBottom.child(uploadId).setValue(upload);
+                                    String uploadId = mDatabaseOne.push().getKey();
+                                    mDatabaseOne.child(uploadId).setValue(upload);
                                 }
                             })
                             .addOnFailureListener(new OnFailureListener() {
