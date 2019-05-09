@@ -26,19 +26,19 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view_top"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="300dp"
             android:orientation="horizontal" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view_bottom"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="300dp"
             android:orientation="horizontal" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view_one"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="300dp"
             android:orientation="horizontal" />
     </LinearLayout>
 
